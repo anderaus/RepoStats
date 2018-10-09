@@ -1,0 +1,9 @@
+body {
+    font-family: "Gill Sans", sans-serif;
+    margin: 2rem;
+    padding: 0;
+}
+
+h1 {
+    border-bottom: 0.2rem solid black;
+}

@@ -1,0 +1,21 @@
+{
+    "created": "2012-04-23T18:25:43.511Z",
+    "repositories": [
+        {
+            "name": "Repo #1",
+            "latestCommit": "2018-10-05T12:12:41.364Z"
+        },
+        {
+            "name": "Repo #2",
+            "latestCommit": "2018-10-01T12:12:41.364Z"
+        },
+        {
+            "name": "Repo #3",
+            "latestCommit": "2018-09-24T18:12:41.364Z"
+        },
+        {
+            "name": "Repo #4",
+            "latestCommit": "2018-10-06T02:16:41.364Z"
+        }
+    ]
+}
