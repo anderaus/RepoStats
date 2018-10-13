@@ -1,21 +1,19 @@
 {
-    "created": "2012-04-23T18:25:43.511Z",
-    "repositories": [
+  "created": "2018-10-13T12:51:53.2928806Z",
+  "repositories": [
+    {
+      "name": "MyFriendlyRepoName",
+      "latestCommit": "2017-04-12T16:44:02+02:00",
+      "contributorCommitCounts": [
         {
-            "name": "Repo #1",
-            "latestCommit": "2018-10-05T12:12:41.364Z"
+          "key": "anders.austad@novanet.no",
+          "value": 166
         },
         {
-            "name": "Repo #2",
-            "latestCommit": "2018-10-01T12:12:41.364Z"
-        },
-        {
-            "name": "Repo #3",
-            "latestCommit": "2018-09-24T18:12:41.364Z"
-        },
-        {
-            "name": "Repo #4",
-            "latestCommit": "2018-10-06T02:16:41.364Z"
+          "key": "someone.else@somewhere.com",
+          "value": 24
         }
-    ]
+      ]
+    }
+  ]
 }

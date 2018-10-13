@@ -36,6 +36,7 @@ namespace RepoStats
             services.Configure<AppSettings>(configuration);
 
             services.AddTransient<RepoParser>();
+            services.AddTransient<PersistenceService>();
             services.AddTransient<App>();
         }
     }

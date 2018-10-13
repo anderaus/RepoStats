@@ -3,6 +3,7 @@ using LibGit2Sharp.Handlers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RepoStats.Configuration;
+using RepoStats.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +35,7 @@ namespace RepoStats
             if (!string.IsNullOrEmpty(_settings.Username))
             {
                 credentialsHandler = (url, usernameFromUrl, types) =>
-                    new UsernamePasswordCredentials()
+                    new UsernamePasswordCredentials
                     {
                         Username = _settings.Username,
                         Password = _settings.Password
@@ -71,40 +72,59 @@ namespace RepoStats
             }
         }
 
-        public CommitStatistics CollectCommitStatistics()
+        public RepositoryModel CollectCommitStatistics()
         {
-            var stats = new CommitStatistics();
+            var repoResult = new RepositoryModel();
+            var commitsPerAuthor = new Dictionary<string, List<Commit>>();
 
             foreach (var branch in _repo.Branches)
             {
-                _logger.LogDebug($"Branch {branch.FriendlyName}");
+                _logger.LogDebug($"Working on branch {branch.FriendlyName}");
 
-                var mostRecentCommit = branch.Commits.FirstOrDefault();
-                if (mostRecentCommit != null
-                    && (stats.MostRecentCommit == null || mostRecentCommit.Author.When > stats.MostRecentCommit.Author.When))
+                var mostRecentCommitOnBranch = branch.Commits.FirstOrDefault();
+                if (mostRecentCommitOnBranch != null
+                    && (repoResult.LatestCommit == default ||
+                        mostRecentCommitOnBranch.Author.When > repoResult.LatestCommit))
                 {
-                    stats.MostRecentCommit = mostRecentCommit;
+                    repoResult.LatestCommit = mostRecentCommitOnBranch.Author.When;
                 }
 
-                var uniqueAuthors = GetUniqueAuthorEmails(branch.Commits);
-                foreach (var email in uniqueAuthors.OrderBy(a => a))
+                foreach (var commit in branch.Commits.Where(IsNotAMergeCommit))
                 {
-                    if (!stats.UniqueAuthorEmails.Contains(email, StringComparer.InvariantCultureIgnoreCase))
+                    var authorEmail = MapToPrimaryEmail(commit.Author.Email);
+                    if (commitsPerAuthor.ContainsKey(authorEmail))
                     {
-                        stats.UniqueAuthorEmails.Add(email.ToLower());
+                        if (!commitsPerAuthor[authorEmail].Contains(commit))
+                        {
+                            commitsPerAuthor[authorEmail].Add(commit);
+                        }
+                    }
+                    else
+                    {
+                        commitsPerAuthor.Add(authorEmail, new List<Commit> { commit });
                     }
                 }
             }
 
-            return stats;
+            repoResult.ContributorCommitCounts.AddRange(
+                commitsPerAuthor
+                    .OrderByDescending(pair => pair.Value.Count)
+                    .Select(pair =>
+                        new KeyValuePair<string, int>(pair.Key, pair.Value.Count)));
+
+            return repoResult;
         }
 
-        private static IEnumerable<string> GetUniqueAuthorEmails(ICommitLog commitLog)
+        private string MapToPrimaryEmail(string email)
         {
-            return commitLog
-                .DistinctBy(c => c.Author.Email)
-                .Select(c => c.Author.Email).ToList();
+            var matchingPrimary = _settings.AuthorEmailAliases
+                .FirstOrDefault(e =>
+                    e.Aliases.Any(a => a.Equals(email, StringComparison.InvariantCultureIgnoreCase)));
+
+            return matchingPrimary?.Primary.ToLower() ?? email.ToLower();
         }
+
+        private static bool IsNotAMergeCommit(Commit commit) => commit.Parents.Count() <= 1;
 
         protected virtual void Dispose(bool disposing)
         {
