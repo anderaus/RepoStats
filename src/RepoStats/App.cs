@@ -42,7 +42,7 @@ namespace RepoStats
 
                 foreach (var contributor in repoResult.ContributorCommitCounts)
                 {
-                    _logger.LogInformation($"\t{contributor.Key} has made {contributor.Value} commits");
+                    _logger.LogInformation($"\t{contributor.Email} has made {contributor.CommitCount} commits");
                 }
             }
 

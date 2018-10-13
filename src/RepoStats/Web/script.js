@@ -52,8 +52,8 @@
             containerEl.appendChild(canvasEl);
 
             repo.contributorCommitCounts.forEach((author, authorIndex) => {
-                labels.push(author.key);
-                data.push(author.value);
+                labels.push(author.email);
+                data.push(author.commitCount);
                 colors.push(piePalette[authorIndex % piePalette.length]);
             });
             var ctx = document.getElementById(chartId).getContext('2d');

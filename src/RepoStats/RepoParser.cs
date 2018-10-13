@@ -110,7 +110,7 @@ namespace RepoStats
                 commitsPerAuthor
                     .OrderByDescending(pair => pair.Value.Count)
                     .Select(pair =>
-                        new KeyValuePair<string, int>(pair.Key, pair.Value.Count)));
+                        new Contributor { Email = pair.Key, CommitCount = pair.Value.Count }));
 
             return repoResult;
         }

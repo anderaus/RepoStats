@@ -7,6 +7,6 @@ namespace RepoStats.Models
     {
         public string Name { get; set; }
         public DateTimeOffset LatestCommit { get; set; }
-        public List<KeyValuePair<string, int>> ContributorCommitCounts { get; set; } = new List<KeyValuePair<string, int>>();
+        public List<Contributor> ContributorCommitCounts { get; set; } = new List<Contributor>();
     }
 }

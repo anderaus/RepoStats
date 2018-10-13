@@ -6,12 +6,12 @@
       "latestCommit": "2017-04-12T16:44:02+02:00",
       "contributorCommitCounts": [
         {
-          "key": "anders.austad@novanet.no",
-          "value": 166
+          "email": "anders.austad@novanet.no",
+          "commitCount": 166
         },
         {
-          "key": "someone.else@somewhere.com",
-          "value": 24
+          "email": "someone.else@somewhere.com",
+          "commitCount": 24
         }
       ]
     }
